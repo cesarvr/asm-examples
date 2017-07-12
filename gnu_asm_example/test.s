@@ -14,9 +14,9 @@ _start:
   movl %ecx, 36(%edi) 
 
 Write: 
-  movl $4, %eax 
-  movl $1, %ebx
-  movl $output, %ecx
+  movl $4, %eax      # syscall write
+  movl $output, %ecx # $output [modified message] to the -> 
+  movl $1, %ebx      # stdout
   movl $42, %edx 
   int  $0x80
 
