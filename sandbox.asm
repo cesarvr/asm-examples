@@ -1,49 +1,27 @@
-section .bss
-  buffer resb 1
+SECTION .data ; Section containing initialized data
 
-section .data
+EatMsg: db "Hello, World!",10
+character: db "N",10
+EatLen: equ $-EatMsg
 
-section .text
-  global _start
-  msg: db "Z",0xa
-  len: equ $ - msg
+SECTION .bss
+
+SECTION .text
 
 global _start
 
-_start:
-  nop
-; New code goes here. 
-
-Read: mov eax, 3 ;sys_call read 
-      mov ebx, 0 ;read stdin 
-      mov ecx, buffer
-      mov edx,1
-      int 80H    ; make_call
-
-      cmp eax, 0  ; if EOF jump to Exit
-      je Exit
-      
-      cmp byte[buffer], 61h 
-      jb Print
-    
-      cmp byte[buffer], 7Ah
-      ja Print
-      
-      sub byte[buffer], 20h
-      
-Print: mov eax,4  ;sys_call write
-       mov ebx,1  ;stdout 
-       mov ecx,buffer ;print buffer 
-       mov edx,1 ;length 
+_start: nop
+       mov eax,4
+       mov ebx,1
+       mov ecx,EatMsg
+       mov edx, [character]
+       mov [ecx+1], dl
+       xor edx, edx
+       mov edx,EatLen
+       add edx, 10
        int 80H
-       jmp Read    
 
-Exit: 
-     mov eax, 1 ;sys_call exit 
-     mov ebx, 0 ;return code to linux 0 (Success)
-     int 80h 
-      
-; New code goes here. 
-  nop 
-
-
+Exit:
+       mov eax,1
+       mov ebx,0
+       int 80H
