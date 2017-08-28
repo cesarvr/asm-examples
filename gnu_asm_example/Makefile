@@ -1,9 +1,9 @@
-cpuid: test.o
-	ld -o cpuid test.o
+cpuid: stack.o
+	ld -o stack stack.o
 
-test.o: test.s
-	as -gstabs -o test.o  test.s 
+stack.o: stack.s
+	as -gstabs -o stack.o  stack.s 
 
 clean: 
-	rm test.o cpuid
+	rm stack.o stack
 	

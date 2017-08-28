@@ -1,31 +1,23 @@
 #cpuid.s Sample program to extract the processor Vendor ID 
-.data
+.section .data
 output:
-      .ascii "The processor Vendor ID is -> %d \n" 
-
-.bss
+  .asciz "The processor Vendor ID is -> '%s' \n" 
+.section .bss
   .lcomm buffer, 12 
-
-.text
+.section .text
 .globl _start
 _start:
-
-  xor %eax, %eax       #zeroing
+  movl $0, %eax       #zeroing
   cpuid                #cpuid with parameter(ebx) 0 return vendor ID
   movl $buffer, %edi 
-  movl %ebx,   (%edi)  #placing 4-bytes contiguosly in from position 28.  
-  movl %edx,  4(%edi) 
-  movl %ecx,  8(%edi) 
-
-Write: 
-  pushl $buffer 
-  pushl $output 
+  movl %ebx,   (%edi)  #placing 32-bit (4 byte) in EDI [0..4]
+  movl %edx,  4(%edi)  #placing 32-bit (4 byte) in EDI [4..8]
+  movl %ecx,  8(%edi)  #placing 32-bit (4 byte) in EDI [8..12]
+  pushq $buffer 
+  pushq $output 
   call  printf 
- 
-
-Exit: 
   addl  $8, %esp 
-  pushl $0
+  pushq $0
   call exit 
 
 
